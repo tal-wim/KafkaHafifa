@@ -12,7 +12,6 @@ public class KafkaConfiguration {
     public final static String DESTINATION_TOPIC = "transformed-topic";
     public final static String SOURCE_TOPIC = "test-topic";
     private final static String TRANSFORMED_CONSUMERS = "transformed-consumer-group";
-    private final static String AUTO_COMMIT_MS = "1000";
     private final static String AUTO_OFFSET_RESET = "earliest";
     private final static String APP_ID =  "uppercase-app";
 
@@ -38,8 +37,7 @@ public class KafkaConfiguration {
         props.put(ConsumerConfig.GROUP_ID_CONFIG, TRANSFORMED_CONSUMERS);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true");
-        props.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, AUTO_COMMIT_MS);
+        props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, AUTO_OFFSET_RESET);
 
         return props;

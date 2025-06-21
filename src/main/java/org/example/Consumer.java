@@ -19,7 +19,7 @@ public class Consumer {
     public static void main(String[] args) {
         try {
             KafkaConsumer<String, String> consumer = new KafkaConsumer<>(getConsumerProps());
-            consumer.subscribe(Pattern.compile("test-topic.*"));
+            consumer.subscribe(Pattern.compile(".*"));
 
             logger.info("Reading from " + DESTINATION_TOPIC + "...");
 
@@ -27,13 +27,10 @@ public class Consumer {
                 ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(1));
 
                 for (ConsumerRecord<String, String> record : records) {
-                    try {
                         logger.info("Received: key=" + record.key() + ", value=" + record.value() +
                                 ", partition=" + record.partition() + ", offset=" + record.offset());
-                    } catch (Exception exception) {
-                        logger.error("Error logging record", exception);
-                    }
                 }
+                consumer.commitSync();
             }
         } catch (Exception e) {
             logger.error("Invalid Kafka config: " + e.getMessage());

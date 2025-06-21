@@ -18,8 +18,8 @@ public class Producer {
             KafkaProducer<String, String> producer = new KafkaProducer<>(getProducerProps());
             ArrayList<String> messages = new ArrayList<>(Arrays.asList("copy code", "hello", "kafka", "streams"));
 
-            for (int i = 0; i < messages.size(); i++) {
-                ProducerRecord<String, String> record = new ProducerRecord<>(SOURCE_TOPIC, String.valueOf(i), messages.get(i));
+            for (int messagesNumber = 0; messagesNumber < messages.size(); messagesNumber++) {
+                ProducerRecord<String, String> record = new ProducerRecord<>(SOURCE_TOPIC, String.valueOf(messagesNumber), messages.get(messagesNumber));
                 producer.send(record, (metadata, exception) -> {
                     if (exception != null) {
                         logger.error("Send failed: " + exception.getMessage());
@@ -28,8 +28,8 @@ public class Producer {
             }
 
             producer.close();
-        } catch (Exception e) {
-            logger.error("Invalid Kafka config: " + e.getMessage());
+        } catch (Exception exception) {
+            logger.error("Invalid Kafka config: " + exception.getMessage());
         }
     }
 }

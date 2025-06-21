@@ -5,7 +5,13 @@
         </encoder>
     </appender>
 
-    <root level="debug">
+    <!-- Quiet down Kafka logs -->
+    <logger name="org.apache.kafka" level="WARN"/>
+    <logger name="org.apache.kafka.clients" level="WARN"/>
+    <logger name="org.apache.kafka.streams" level="WARN"/>
+
+    <!-- Set your root logger level -->
+    <root level="DEBUG">
         <appender-ref ref="STDOUT" />
     </root>
 </configuration>
