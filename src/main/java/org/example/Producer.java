@@ -25,6 +25,7 @@ public class Producer {
                         logger.error("Send failed: " + exception.getMessage());
                     }
                 });
+                logger.info("message was sent: " + messages.get(messagesNumber));
             }
 
             producer.close();
