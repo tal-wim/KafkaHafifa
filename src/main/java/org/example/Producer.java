@@ -1,24 +1,35 @@
 package org.example;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.common.serialization.StringSerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Properties;
-import static org.example.UppercaseStream.SOURCE_TOPIC;
+import static org.example.KafkaConfiguration.SOURCE_TOPIC;
+import static org.example.KafkaConfiguration.getProducerProps;
 
 public class Producer {
+    private static final Logger logger = LoggerFactory.getLogger(Producer.class);
+
     public static void main(String[] args) {
-        Properties props = new Properties();
-        props.put("bootstrap.servers", "localhost:9092");
-        props.put("key.serializer", StringSerializer.class.getName());
-        props.put("value.serializer", StringSerializer.class.getName());
+        try {
+            KafkaProducer<String, String> producer = new KafkaProducer<>(getProducerProps());
+            ArrayList<String> messages = new ArrayList<>(Arrays.asList("copy code", "hello", "kafka", "streams"));
 
-        KafkaProducer<String, String> producer = new KafkaProducer<>(props);
+            for (int i = 0; i < messages.size(); i++) {
+                ProducerRecord<String, String> record = new ProducerRecord<>(SOURCE_TOPIC, String.valueOf(i), messages.get(i));
+                producer.send(record, (metadata, exception) -> {
+                    if (exception != null) {
+                        logger.error("Send failed: " + exception.getMessage());
+                    }
+                });
+            }
 
-        producer.send(new ProducerRecord<>(SOURCE_TOPIC, "copy code"));
-        producer.send(new ProducerRecord<>(SOURCE_TOPIC, "hello"));
-        producer.send(new ProducerRecord<>(SOURCE_TOPIC, "kafka"));
-        producer.send(new ProducerRecord<>(SOURCE_TOPIC, "streams"));
-
-        producer.close();
+            producer.close();
+        } catch (Exception e) {
+            logger.error("Invalid Kafka config: " + e.getMessage());
+        }
     }
 }
